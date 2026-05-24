@@ -1,0 +1,6 @@
+const taskTag = {
+    NOT_STARTED: "NOT_STARTED",
+    BLOCKED: "BLOCKED",
+    IN_PROGRESS: "IN_PROGRESS",
+    DONE: "DONE"
+}
