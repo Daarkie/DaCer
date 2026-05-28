@@ -4,3 +4,5 @@ const taskTag = {
     IN_PROGRESS: "IN_PROGRESS",
     DONE: "DONE"
 }
+
+exports.taskTag = taskTag;

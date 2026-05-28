@@ -2,7 +2,7 @@ const goalsDao = require("../../dao/goalsDao");
 
 function listAbl(req, res) {
     try {
-        return goalsDao.listGoals();
+        return res.status(200).json(goalsDao.listGoals());
 
     } catch (error) {
         console.log(error);

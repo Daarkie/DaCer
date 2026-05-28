@@ -55,7 +55,7 @@ function updateAbl(req, res) {
         }
 
         // Check if all dependency Tasks exist in DB
-        for (const dependency in data.dependencies.split(",")) {
+        for (const dependency of data.dependencies.split(",")) {
             if (!tasksDao.getTask(dependency)) {
                 return res.status(404).json({error: `Dependency with ID: ${dependency} not found`});
             }
@@ -74,7 +74,7 @@ function updateAbl(req, res) {
 
         data.notes = data.notes?.trim();
 
-        return tasksDao.updateTask(data);
+        return res.status(200).json(tasksDao.updateTask(data));
 
     } catch (error) {
         console.log(error);

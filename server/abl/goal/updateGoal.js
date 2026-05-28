@@ -41,7 +41,7 @@ function updateAbl(req, res) {
         data.responsibility = data.responsibility?.trim();
         data.summary = data.summary?.trim();
         data.notes = data.notes?.trim();
-        let parent = goalsDao.getGoal(data.parent_id);
+        let parent = data.parent_id ? goalsDao.getGoal(data.parent_id) : null;
         while (parent?.parent_id) {
             if (parent.parent_id === data.id) {
                 return res.status(400).json({error: "Circular dependency of the parent goal"});
@@ -50,7 +50,7 @@ function updateAbl(req, res) {
         }
         data.parent_id = parent ? data.parent_id : null;
 
-        return goalsDao.updateGoal(data);
+        return res.status(200).json(goalsDao.updateGoal(data));
 
     } catch (error) {
         console.log(error);

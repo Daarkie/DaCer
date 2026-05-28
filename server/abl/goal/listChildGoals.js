@@ -28,10 +28,10 @@ function childGoalsAbl(req, res) {
 
         //  Check goal exists first
         if (!goalsDao.getGoal(data.id)) {
-            return res.status(400).json({error: `Goal with ID: ${data.id} not found`});
+            return res.status(404).json({error: `Goal with ID: ${data.id} not found`});
         }
 
-        return goalsDao.listChildGoals(data.id);
+        return res.status(200).json(goalsDao.listChildGoals(data.id));
 
     } catch (error) {
         console.log(error);

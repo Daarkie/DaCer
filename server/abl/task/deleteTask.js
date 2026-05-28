@@ -31,14 +31,14 @@ function deleteAbl(req, res) {
         }
 
         //  To remove other tasks' dependency on the deleted one
-        const taskDependants = tasksDao.listTasks(`dependencies LIKE '%${data.id}%'`, "id,dependencies");
+        const taskDependants = tasksDao.listDependantTasks(data.id);
         for (const taskDep of taskDependants) {
             const deps = taskDep.dependencies.split(",");
             const newDep = deps.filter(dep => data.id !== dep).join(",");
             tasksDao.updateTask({id: taskDep.id, dependencies: newDep});
         }
 
-        return tasksDao.deleteTask(data);
+        return res.status(200).json(tasksDao.deleteTask(data.id));
 
     } catch (error) {
         console.log(error);

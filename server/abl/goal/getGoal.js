@@ -42,7 +42,7 @@ function getAbl(req, res) {
             return res.status(404).json({error: `Goal with name: "${data.name}" not found`});
         }
 
-        return goal;
+        return res.status(200).json(goal);
 
     } catch (error) {
         console.log(error);

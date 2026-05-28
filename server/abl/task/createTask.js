@@ -37,9 +37,9 @@ function createAbl(req, res) {
         }
 
         // Check if all dependency Tasks exist in DB
-        for (const dependency in data.dependencies.split(",")) {
-            if (!tasksDao.getTask(dependency)) {
-                return res.status(404).json({error: `Dependency with ID: ${dependency} not found`});
+        for (const dependencyId of data.dependencies.split(",")) {
+            if (!tasksDao.getTask(dependencyId)) {
+                return res.status(404).json({error: `Dependency with ID: ${dependencyId} not found`});
             }
         }
 
@@ -48,11 +48,10 @@ function createAbl(req, res) {
             return res.status(400).json({error: `Task named: "${data.name}" already exists`});
         }
 
+        data.notes = data.notes?.trim();
         data.content = data.content?.trim();
 
-        data.notes = data.notes?.trim();
-
-        return tasksDao.createTask(data);
+        return res.status(200).json(tasksDao.createTask(data));
 
     } catch (error) {
         console.log(error);

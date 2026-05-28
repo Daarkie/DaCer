@@ -42,16 +42,18 @@ function deleteAbl(req, res) {
             }
             for (const goal of childGoals) {
                 deleteAbl({
-                    id: goal.id,
-                    full_delete: goal.full_delete
+                    body: {
+                        id: goal.id,
+                        full_delete: goal.full_delete
+                    }
                 });
             }
             for (const task of childTasks) {
-                deleteTask({id: task.id});
+                deleteTask({body: {id: task.id}});
             }
         }
 
-        return goalsDao.deleteGoal(data.id);
+        return res.status(200).json(goalsDao.deleteGoal(data.id));
 
     } catch (error) {
         console.log(error);

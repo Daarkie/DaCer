@@ -4,7 +4,6 @@ const ajv = new Ajv();
 addFormats(ajv);
 
 const tasksDao = require("../../dao/tasksDao");
-const {getGoal} = require("../../dao/goalsDao");
 
 // Validating schema to use
 const schema = {
@@ -38,7 +37,7 @@ function getAbl(req, res) {
             return res.status(404).json({error: `Task id: ${data.id} not found`});
         }
 
-        const task = getGoal(data.id || data.name, !!data.name);
+        const task = tasksDao.getTask(data.id || data.name, !!data.name);
         if (!task) {
             if (data.id) {
                 return res.status(404).json({error: `Task with id: ${data.id} not found`});
@@ -46,7 +45,7 @@ function getAbl(req, res) {
             return res.status(404).json({error: `Task with name: "${data.id}" not found`});
         }
 
-        return task;
+        return res.status(200).json(task);
 
     } catch (error) {
         console.log(error);

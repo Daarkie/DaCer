@@ -4,6 +4,7 @@ const ajv = new Ajv();
 addFormats(ajv);
 
 const tasksDao = require("../../dao/tasksDao");
+const {taskTag} = require("../../utils/enums");
 
 // Validating schema to use
 const schema = {
@@ -27,11 +28,11 @@ function statusAbl(req, res) {
             return res.status(400).json({error: validate.errors});
         }
 
-        if (tasksDao.getTask(data.id)) {
+        if (!tasksDao.getTask(data.id)) {
             return res.status(404).json({error: `Task with id: ${data.id} not found`});
         }
 
-        return tasksDao.updateTaskStatus(data.id, data.status);
+        return res.status(200).json(tasksDao.updateTaskStatus(data.id, data.status));
 
     } catch (error) {
         console.log(error);

@@ -31,7 +31,7 @@ function childrenAbl(req, res) {
             return res.status(404).json({error: `Goal with id: ${data.id} not found`});
         }
 
-        return tasksDao.listTasks(`parent_id = ${data.id}`);
+        return res.status(200).json(tasksDao.listTasksByParentGoal(data.id));
 
     } catch (error) {
         console.log(error);

@@ -3,7 +3,6 @@ const router = express.Router();
 
 const GetAbl = require("../abl/task/getTask");
 const ListAbl = require("../abl/task/listTasks");
-const DependenciesAbl = require("../abl/task/listDependencyTasks");
 const ChildrenAbl = require("../abl/task/listChildTasks");
 const CreateAbl = require("../abl/task/createTask");
 const StatusAbl = require("../abl/task/statusUpdateTask");
@@ -12,7 +11,6 @@ const DeleteAbl = require("../abl/task/deleteTask");
 
 router.get("/get", GetAbl);
 router.get("/list", ListAbl);
-router.post("/dependencies", DependenciesAbl);
 router.post("/children", ChildrenAbl)
 router.post("/create", CreateAbl);
 router.post("/status", StatusAbl);

@@ -1,102 +1,144 @@
 const crypto = require("crypto");
-const {DatabaseSync} = require('node:sqlite');
-const db = new DatabaseSync('data/dacer_db.db')
+const {DatabaseSync} = require("node:sqlite");
+
+const db = new DatabaseSync("data/dacer_db.db");
 
 function foundGoalsTable() {
-    db.exec(`CREATE TABLE IF NOT EXISTS "goals"
-             (
-                 "id"
-                     TEXT,
-                 "name"
-                     TEXT
-                     NOT NULL
-                     UNIQUE,
-                 "responsibility"
-                     TEXT,
-                 "summary"
-                     TEXT,
-                 "deadline"
-                     INTEGER
-                     NOT NULL,
-                 "parent_id"
-                     TEXT,
-                 "priority"
-                     INTEGER
-                     NOT NULL,
-                 "notes"
-                     TEXT,
-                 PRIMARY KEY ("id")
-             )`)
+    db.exec(`
+        CREATE TABLE IF NOT EXISTS goals
+        (
+            id             TEXT PRIMARY KEY,
+            name           TEXT NOT NULL UNIQUE,
+            responsibility TEXT,
+            summary        TEXT,
+            deadline       INTEGER NOT NULL,
+            parent_id      TEXT,
+            priority       INTEGER NOT NULL,
+            notes          TEXT
+        )
+    `);
 
     return true;
 }
 
 function listGoals() {
-    return filterGoals("*");
+    return db.prepare(`
+        SELECT *
+        FROM goals
+    `).all();
 }
 
 function listChildGoals(parentId) {
-    return filterGoals("*", `parent_id = ${parentId}`);
+    return db.prepare(`
+        SELECT *
+        FROM goals
+        WHERE parent_id = $parentId
+    `).all({
+        $parentId: parentId
+    });
 }
 
 function getGoal(goalIdentification, isName = false) {
     if (isName) {
-        return filterGoals("*", `name = ${goalIdentification}`)[0];
+        return db.prepare(`
+            SELECT *
+            FROM goals
+            WHERE name = $name
+            LIMIT 1
+        `).get({
+            $name: goalIdentification
+        });
     }
-    return filterGoals("*", `id = ${goalIdentification}`)[0];
-}
 
-function filterGoals(cols, filters) {
-    let query;
-    if (!filters) {
-        query = db.prepare(`SELECT ${cols}
-                            FROM goals`);
-    } else {
-        query = db.prepare(`SELECT ${cols}
-                            FROM goals
-                            WHERE ${filters}`)
-    }
-    return query.all();
+    return db.prepare(`
+        SELECT *
+        FROM goals
+        WHERE id = $id
+        LIMIT 1
+    `).get({
+        $id: goalIdentification
+    });
 }
 
 function createGoal(goal) {
-    goal.id = crypto.randomBytes(32).toString(16);
-    return addGoal(goal);
-}
+    const newGoal = {
+        ...goal,
+        id: crypto.randomBytes(32).toString("hex")
+    };
 
-function addGoal(goal) {
-    db.exec(`INSERT INTO goals (id, name, responsibility, summary, deadline, parent_id, priority, notes)
-             VALUES (${goal.id}, ${goal.name}, ${goal.responsibility}, ${goal.summary}, ${goal.deadline},
-                     ${goal.parentId},
-                     ${goal.priority}, ${goal.notes})`);
-    return goal;
+    db.prepare(`
+        INSERT INTO goals (id,
+                           name,
+                           responsibility,
+                           summary,
+                           deadline,
+                           parent_id,
+                           priority,
+                           notes)
+        VALUES ($id,
+                $name,
+                $responsibility,
+                $summary,
+                $deadline,
+                $parentId,
+                $priority,
+                $notes)
+    `).run({
+        $id: newGoal.id,
+        $name: newGoal.name,
+        $responsibility: newGoal.responsibility ?? null,
+        $summary: newGoal.summary ?? null,
+        $deadline: newGoal.deadline,
+        $parentId: newGoal.parentId ?? null,
+        $priority: newGoal.priority,
+        $notes: newGoal.notes ?? null
+    });
+
+    return newGoal;
 }
 
 function updateGoal(goal) {
-    db.exec(`UPDATE goals
-             SET name           = ${goal.name},
-                 responsibility = ${goal.responsibility},
-                 summary        = ${goal.summary},
-                 deadline       = ${goal.deadline},
-                 parent_id      = ${goal.parentId},
-                 priority       = ${goal.priority},
-                 notes          = ${goal.notes}
-             WHERE id = ${goal.id}`)
-    return goal;
+    db.prepare(`
+        UPDATE goals
+        SET name           = COALESCE($name, name),
+            responsibility = COALESCE($responsibility, responsibility),
+            summary        = COALESCE($summary, summary),
+            deadline       = COALESCE($deadline, deadline),
+            parent_id      = COALESCE($parentId, parent_id),
+            priority       = COALESCE($priority, priority),
+            notes          = COALESCE($notes, notes)
+        WHERE id = $id
+    `).run({
+        $id: goal.id,
+        $name: goal.name ?? null,
+        $responsibility: goal.responsibility ?? null,
+        $summary: goal.summary ?? null,
+        $deadline: goal.deadline ?? null,
+        $parentId: goal.parentId ?? null,
+        $priority: goal.priority ?? null,
+        $notes: goal.notes ?? null
+    });
+
+    return getGoal(goal.id);
 }
 
 function deleteGoal(goalId) {
-    db.exec(`DELETE
-             FROM goals
-             WHERE id = ${goalId}`);
+    db.prepare(`
+        DELETE
+        FROM goals
+        WHERE id = $id
+    `).run({
+        $id: goalId
+    });
+
     return goalId;
 }
 
 module.exports = {
     foundGoalsTable,
     listGoals,
-    getGoal,
     listChildGoals,
+    getGoal,
     createGoal,
     updateGoal,
     deleteGoal

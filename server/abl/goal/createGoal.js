@@ -42,7 +42,7 @@ function createAbl(req, res) {
         data.notes = data.notes?.trim();
         data.parent_id = goalsDao.getGoal(data.parent_id) ? data.parent_id : null;
 
-        return goalsDao.createGoal(data);
+        return res.status(200).json(goalsDao.createGoal(data));
 
     } catch (error) {
         console.log(error);
