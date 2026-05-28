@@ -11,12 +11,12 @@ const {getTask} = require("../../dao/tasksDao");
 const schema = {
     type: "object",
     properties: {
-        id: { type: "string", minLength: 64, maxLength: 64 },
+        id: {type: "string", minLength: 32, maxLength: 32},
         name: {type: "string", maxLength: 100},
         content: {type: "string", maxLength: 350},
         dependencies: {type: "string"},
         length: {type: "integer", minimum: 0},
-        parent_id: {type: "string", minLength: 64, maxLength: 64},
+        parent_id: {type: "string", minLength: 32, maxLength: 32},
         notes: {type: "string", maxLength: 350},
     },
     required: ["id"],
@@ -55,13 +55,15 @@ function updateAbl(req, res) {
         }
 
         // Check if all dependency Tasks exist in DB
-        for (const dependency of data.dependencies.split(",")) {
-            if (!tasksDao.getTask(dependency)) {
-                return res.status(404).json({error: `Dependency with ID: ${dependency} not found`});
-            }
-            // And they are not dependent on each other
-            if (isCircularDependency(dependency, data.id)) {
-                return res.status(400).json({error: `Dependency with ID: ${dependency} is circular`});
+        if (data.dependencies) {
+            for (const dependency of data.dependencies.split(",")) {
+                if (!tasksDao.getTask(dependency)) {
+                    return res.status(404).json({error: `Dependency with ID: ${dependency} not found`});
+                }
+                // And they are not dependent on each other
+                if (isCircularDependency(dependency, data.id)) {
+                    return res.status(400).json({error: `Dependency with ID: ${dependency} is circular`});
+                }
             }
         }
 

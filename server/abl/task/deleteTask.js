@@ -9,7 +9,7 @@ const tasksDao = require("../../dao/tasksDao");
 const schema = {
     type: "object",
     properties: {
-        id: {type: "string", minLength: 64, maxLength: 64}
+        id: {type: "string", minLength: 32, maxLength: 32}
     },
     required: ["id"],
     additionalProperties: false,

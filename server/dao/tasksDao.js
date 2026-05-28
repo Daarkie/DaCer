@@ -31,13 +31,13 @@ function listTasks() {
     `).all();
 }
 
-function listTasksByParentGoal(parentId) {
+function listTasksByParentGoal(parent_id) {
     return db.prepare(`
         SELECT *
         FROM tasks
-        WHERE parent_id = $parentId
+        WHERE parent_id = $parent_id
     `).all({
-        $parentId: parentId
+        parent_id: parent_id
     });
 }
 
@@ -66,7 +66,7 @@ function getTask(identification, isName = false) {
 function createTask(task) {
     const newTask = {
         ...task,
-        id: crypto.randomBytes(32).toString("hex"),
+        id: crypto.randomBytes(16).toString("hex"),
         status: task.status ?? taskTag.NOT_STARTED
     };
 
@@ -77,7 +77,6 @@ function createTask(task) {
                            content,
                            dependencies,
                            length,
-                           started,
                            parent_id,
                            notes)
         VALUES ($id,
@@ -86,8 +85,7 @@ function createTask(task) {
                 $content,
                 $dependencies,
                 $length,
-                $started,
-                $parentId,
+                $parent_id,
                 $notes)
     `).run({
         $id: newTask.id,
@@ -96,8 +94,7 @@ function createTask(task) {
         $content: newTask.content ?? null,
         $dependencies: normalizeDependencies(newTask.dependencies),
         $length: newTask.length,
-        $started: newTask.started ?? null,
-        $parentId: newTask.parentId,
+        parent_id: newTask.parent_id,
         $notes: newTask.notes ?? null
     });
 
@@ -131,7 +128,7 @@ function updateTask(task) {
             content      = COALESCE($content, content),
             dependencies = COALESCE($dependencies, dependencies),
             length       = COALESCE($length, length),
-            parent_id    = COALESCE($parentId, parent_id),
+            parent_id    = COALESCE($parent_id, parent_id),
             notes        = COALESCE($notes, notes)
         WHERE id = $id
     `).run({
@@ -142,7 +139,7 @@ function updateTask(task) {
             ? null
             : normalizeDependencies(task.dependencies),
         $length: task.length ?? null,
-        $parentId: task.parentId ?? null,
+        parent_id: task.parent_id ?? null,
         $notes: task.notes ?? null
     });
 

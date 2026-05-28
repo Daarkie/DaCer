@@ -11,7 +11,7 @@ const deleteTask = require("../task/deleteTask");
 const schema = {
     type: "object",
     properties: {
-        id: {type: "string", minLength: 64, maxLength: 64},
+        id: {type: "string", minLength: 32, maxLength: 32},
         full_delete: {type: "boolean"},
     },
     required: ["id"],

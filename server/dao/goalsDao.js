@@ -28,13 +28,13 @@ function listGoals() {
     `).all();
 }
 
-function listChildGoals(parentId) {
+function listChildGoals(parent_id) {
     return db.prepare(`
         SELECT *
         FROM goals
-        WHERE parent_id = $parentId
+        WHERE parent_id = $parent_id
     `).all({
-        $parentId: parentId
+        parent_id: parent_id
     });
 }
 
@@ -63,7 +63,7 @@ function getGoal(goalIdentification, isName = false) {
 function createGoal(goal) {
     const newGoal = {
         ...goal,
-        id: crypto.randomBytes(32).toString("hex")
+        id: crypto.randomBytes(16).toString("hex")
     };
 
     db.prepare(`
@@ -80,7 +80,7 @@ function createGoal(goal) {
                 $responsibility,
                 $summary,
                 $deadline,
-                $parentId,
+                $parent_id,
                 $priority,
                 $notes)
     `).run({
@@ -89,7 +89,7 @@ function createGoal(goal) {
         $responsibility: newGoal.responsibility ?? null,
         $summary: newGoal.summary ?? null,
         $deadline: newGoal.deadline,
-        $parentId: newGoal.parentId ?? null,
+        parent_id: newGoal.parent_id ?? null,
         $priority: newGoal.priority,
         $notes: newGoal.notes ?? null
     });
@@ -104,7 +104,7 @@ function updateGoal(goal) {
             responsibility = COALESCE($responsibility, responsibility),
             summary        = COALESCE($summary, summary),
             deadline       = COALESCE($deadline, deadline),
-            parent_id      = COALESCE($parentId, parent_id),
+            parent_id      = COALESCE($parent_id, parent_id),
             priority       = COALESCE($priority, priority),
             notes          = COALESCE($notes, notes)
         WHERE id = $id
@@ -114,7 +114,7 @@ function updateGoal(goal) {
         $responsibility: goal.responsibility ?? null,
         $summary: goal.summary ?? null,
         $deadline: goal.deadline ?? null,
-        $parentId: goal.parentId ?? null,
+        parent_id: goal.parent_id ?? null,
         $priority: goal.priority ?? null,
         $notes: goal.notes ?? null
     });

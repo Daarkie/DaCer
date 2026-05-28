@@ -10,7 +10,7 @@ const {taskTag} = require("../../utils/enums");
 const schema = {
     type: "object",
     properties: {
-        id: { type: "string", minLength: 64, maxLength: 64 },
+        id: { type: "string", minLength: 32, maxLength: 32 },
         status: {type: "string", oneOf: [{pattern: taskTag.IN_PROGRESS}, {pattern: taskTag.BLOCKED}, {pattern: taskTag.NOT_STARTED}, {pattern: taskTag.DONE}],}
     },
     required: ["id","status"],

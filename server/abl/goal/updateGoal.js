@@ -9,7 +9,7 @@ const goalsDao = require("../../dao/goalsDao");
 const schema = {
     type: "object",
     properties: {
-        id: {type: "string", minLength: 64, maxLength: 64},
+        id: {type: "string", minLength: 32, maxLength: 32},
         name: {type: "string", maxLength: 100},
         responsibility: {type: "string", maxLength: 100},
         summary: {type: "string", maxLength: 350},
