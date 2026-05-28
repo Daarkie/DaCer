@@ -1,4 +1,6 @@
 const express = require("express");
+const initDb = require("./server/dao/initDb");
+
 const app = express();
 const port = 3000;
 
@@ -7,6 +9,8 @@ const goalController = require("./server/controllers/goalController");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+initDb();
 
 app.get("/", (req, res) => {
     res.send("Frontend TBD!");
