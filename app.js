@@ -16,5 +16,5 @@ app.use("/task", taskController);
 app.use("/goal", goalController);
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`DaCer app listening on port ${port}`);
 });

@@ -40,7 +40,8 @@ function createAbl(req, res) {
         data.responsibility = data.responsibility?.trim();
         data.summary = data.summary?.trim();
         data.notes = data.notes?.trim();
-        data.parent_id = goalsDao.getGoal(data.parent_id) ? data.parent_id : null;
+        const hasParent = data.parent_id && goalsDao.getGoal(data.parent_id);
+        data.parent_id = hasParent ? data.parent_id : null;
 
         return res.status(200).json(goalsDao.createGoal(data));
 

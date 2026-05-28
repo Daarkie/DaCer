@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const {DatabaseSync} = require("node:sqlite");
 
-const db = new DatabaseSync("data/dacer_db.db");
+const db = require("./db");
 
 function foundGoalsTable() {
     db.exec(`

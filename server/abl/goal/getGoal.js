@@ -19,7 +19,6 @@ const schema = {
             },
             required: ["name"],
         }],
-        additionalProperties: false,
     }
 ;
 

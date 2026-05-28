@@ -3,7 +3,7 @@ const {DatabaseSync} = require("node:sqlite");
 
 const { taskTag } = require("../utils/enums");
 
-const db = new DatabaseSync("data/dacer_db.db");
+const db = require("./db");
 
 function foundTasksTable() {
     db.exec(`
