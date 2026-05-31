@@ -14,7 +14,7 @@ const schema = {
         content: {type: "string", maxLength: 350},
         dependencies: {type: "string"},
         length: {type: "integer", minimum: 0},
-        parent_id: {type: "string", minLength: 64, maxLength: 64},
+        parent_id: {type: "string", minLength: 32, maxLength: 32},
         notes: {type: "string", maxLength: 350},
     },
     required: ["name", "length", "parent_id"],
