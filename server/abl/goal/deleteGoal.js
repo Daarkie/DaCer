@@ -36,7 +36,7 @@ function deleteAbl(req, res) {
         //  Check child Goals and child Tasks, delete all if advised with "full_delete"
         const childTasks = listTasks(`parent_id = ${data.id}`);
         const childGoals = goalsDao.listChildGoals(data.id);
-        if (childTasks || childGoals) {
+        if (childTasks.length || childGoals.length) {
             if (!data.full_delete) {
                 return res.status(400).json({error: `Goal with ID: ${data.id} you are trying to delete has children`});
             }
