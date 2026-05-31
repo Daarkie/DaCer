@@ -150,7 +150,7 @@ function listDependantTasks(taskId) {
     return db.prepare(`
         SELECT *
         FROM tasks
-        WHERE dependencies LIKE '%$taskId%'
+        WHERE dependencies LIKE $taskId
     `).all({
         $taskId: taskId
     });
