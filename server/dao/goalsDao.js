@@ -34,7 +34,7 @@ function listChildGoals(parent_id) {
         FROM goals
         WHERE parent_id = $parent_id
     `).all({
-        parent_id: parent_id
+        $parent_id: parent_id
     });
 }
 
@@ -89,7 +89,7 @@ function createGoal(goal) {
         $responsibility: newGoal.responsibility ?? null,
         $summary: newGoal.summary ?? null,
         $deadline: newGoal.deadline,
-        parent_id: newGoal.parent_id ?? null,
+        $parent_id: newGoal.parent_id ?? null,
         $priority: newGoal.priority,
         $notes: newGoal.notes ?? null
     });
@@ -114,7 +114,7 @@ function updateGoal(goal) {
         $responsibility: goal.responsibility ?? null,
         $summary: goal.summary ?? null,
         $deadline: goal.deadline ?? null,
-        parent_id: goal.parent_id ?? null,
+        $parent_id: goal.parent_id ?? null,
         $priority: goal.priority ?? null,
         $notes: goal.notes ?? null
     });

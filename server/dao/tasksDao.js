@@ -94,7 +94,7 @@ function createTask(task) {
         $content: newTask.content ?? null,
         $dependencies: normalizeDependencies(newTask.dependencies),
         $length: newTask.length,
-        parent_id: newTask.parent_id,
+        $parent_id: newTask.parent_id,
         $notes: newTask.notes ?? null
     });
 
@@ -139,7 +139,7 @@ function updateTask(task) {
             ? null
             : normalizeDependencies(task.dependencies),
         $length: task.length ?? null,
-        parent_id: task.parent_id ?? null,
+        $parent_id: task.parent_id ?? null,
         $notes: task.notes ?? null
     });
 
