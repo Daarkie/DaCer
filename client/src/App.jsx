@@ -541,7 +541,7 @@ function ItemCard({ item, tab, goals, tasks, active, onClick, onStatusChange }) 
       )}
 
       <div className="card-main">
-        <small>{isTask ? `${parent?.name || "No goal"} >> ... >> ${item.name}` : item.responsibility || "N/A"}</small>
+        <small>{isTask ? `${topGoalName(parent, goals)} >> ... >> ${parent.name}` : item.responsibility || "N/A"}</small>
         <h2>{item.name}</h2>
         <p>{isTask ? item.content || "No content yet" : item.summary || "No summary yet"}</p>
       </div>
@@ -838,7 +838,7 @@ function calculateGoalProgress(goal, goals, tasks = []) {
   const childProgress = childGoals.map((child) => calculateGoalProgress(child, goals, tasks));
   const total = totalDirect + childProgress.length;
 
-  if (!total) return 0;
+  if (!total) return 100;
 
   const done = doneDirect + childProgress.reduce((sum, progress) => sum + progress / 100, 0);
   return Math.round((done / total) * 100);
