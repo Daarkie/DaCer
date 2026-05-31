@@ -112,6 +112,16 @@ export default function App() {
   }, [tab, tasks, goals, selectedId]);
 
   useEffect(() => {
+    if (!apiNotice) return;
+
+    const timer = setTimeout(() => {
+      setApiNotice("");
+    }, 6000);
+
+    return () => clearTimeout(timer);
+  }, [apiNotice]);
+
+  useEffect(() => {
     if (!goals.length && tab === "tasks") {
       setTab("goals");
     }
@@ -349,7 +359,14 @@ export default function App() {
         </div>
       </div>
 
-      {apiNotice && <div className="notice">{apiNotice}</div>}
+      {apiNotice && (
+          <div className="notice">
+            <span>{apiNotice}</span>
+            <button type="button" onClick={() => setApiNotice("")}>
+              ×
+            </button>
+          </div>
+      )}
 
       <section className={selected ? "workspace has-detail" : "workspace"}>
         {visibleItems.length === 0 ? (
@@ -744,7 +761,7 @@ function TaskModal({ goals, tasks, onClose, onSubmit }) {
                 className={form.dependencies.includes(task.id) ? "dependency-pill selected" : "dependency-pill"}
                 onClick={() => toggleDependency(task.id)}
               >
-                <X size={16} /> {task.name}
+                {task.name}
               </button>
             ))}
           </div>
