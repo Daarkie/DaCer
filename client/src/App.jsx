@@ -189,7 +189,6 @@ export default function App() {
 
     async function createGoal(form) {
         const newGoal = {
-            id: crypto.randomUUID(),
             name: form.name.trim(),
             responsibility: form.responsibility.trim(),
             summary: form.summary.trim(),
