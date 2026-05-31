@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 initDb();
 
 app.get("/", (req, res) => {
-    res.send("Frontend TBD!");
+    res.send("DaCer, all shall be done!");
 });
 
 app.use("/task", taskController);
